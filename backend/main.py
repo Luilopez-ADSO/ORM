@@ -29,7 +29,7 @@ def home():
      Ruta de prueba para verificar que la API esté 
      funcionando
     """  
-    return jsonify({"mensaje": "API funcionando correctamente"}), 200
+    return jsonify({"mensaje": "API está funcionando correctamente"}), 200
 # Registrar blueprints 
 app.register_blueprint(error_bp) 
 app.register_blueprint(productos_bp) 

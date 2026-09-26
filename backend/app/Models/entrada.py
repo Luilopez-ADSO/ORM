@@ -1,56 +1,24 @@
-from . import db
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Date, ForeignKey
 from datetime import date
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from .producto import Producto
+from . import db
 
 
 class Entrada(db.Model):
     __tablename__ = "entradas"
 
-    entra_id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True
+    entra_id = db.Column(db.Integer, primary_key=True)
+    entra_producto_id = db.Column(
+        db.Integer,
+        db.ForeignKey("productos.producto_id"),
+        nullable=False,
     )
+    entra_cantidad = db.Column(db.Integer, nullable=False)
+    entra_factura = db.Column(db.String(100), nullable=False, default="")
+    entra_stand = db.Column(db.String(50), nullable=False, default="")
+    entra_ubicacion = db.Column(db.String(100), nullable=False, default="")
+    entra_fecha = db.Column(db.Date, default=date.today)
 
-    entra_producto_id: Mapped[int] = mapped_column(
-        Integer,
-        ForeignKey("productos.producto_id"),
-        nullable=False
-    )
-
-    entra_cantidad: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
-
-    entra_factura: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
-
-    entra_stand: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False
-    )
-
-    entra_ubicacion: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False
-    )
-
-    entra_fecha: Mapped[date] = mapped_column(
-        Date,
-        default=date.today
-    )
-
-    producto: Mapped["Producto"] = relationship(
-        "Producto",
-        back_populates="entradas"
-    )
+    producto = db.relationship("Producto", back_populates="entradas")
 
     def to_dict(self):
         return {
@@ -60,6 +28,5 @@ class Entrada(db.Model):
             "factura": self.entra_factura,
             "stand": self.entra_stand,
             "ubicacion": self.entra_ubicacion,
-            "fecha": self.entra_fecha.isoformat()
-            if self.entra_fecha else None
+            "fecha": self.entra_fecha.isoformat() if self.entra_fecha else None,
         }

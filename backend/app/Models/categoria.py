@@ -1,26 +1,16 @@
 from . import db
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String
 
 
 class Categoria(db.Model):
     __tablename__ = "categorias"
 
-    categoria_id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True
+    categoria_id = db.Column(db.Integer, primary_key=True)
+    categoria_nombre = db.Column(
+        db.String(50), unique=True, nullable=False
     )
+    descripcion = db.Column(db.String(150), nullable=False)
 
-    categoria_nombre: Mapped[str] = mapped_column(
-        String(50),
-        unique=True,
-        nullable=False
-    )
-
-    descripcion: Mapped[str] = mapped_column(
-        String(150),
-        nullable=False
-    )
+    productos = db.relationship("Producto", back_populates="categoria")
 
     def to_dict(self):
         return {
